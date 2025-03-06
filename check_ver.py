@@ -1,4 +1,4 @@
-
+import re
 def process_show_environment(hostname, output):
     # Regular expressions for IOS XE alarm checks
     critical_alarms_re = re.compile(r'Number of Critical alarms:\s+(\d+)', re.IGNORECASE)
