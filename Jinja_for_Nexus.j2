@@ -1,0 +1,1309 @@
+
+
+hostname {{ hostname }}
+
+policy-map type network-qos jumbo
+  class type network-qos class-default
+    mtu 9216
+
+vdc {{ hostname }} id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 104
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+hardware access-list tcam region ing-racl 1280
+hardware access-list tcam region ing-ifacl 256
+hardware access-list tcam region ing-redirect 256
+
+{% set features = ['tacacs+', 'scheduler', 'ospf', 'bgp', 'pim', 'udld', 'interface-vlan', 'hsrp', 'lacp', 'dhcp', 'lldp', 'bfd', 'vtp', 'sflow'] %}
+{% for feature in features %}
+feature {{ feature }}
+{% endfor %}
+
+clock timezone GMT 0 0
+
+mac address-table aging-time 14460
+
+role name Eng
+  description FSC Access
+  {% set rules = [
+      (8, 'terminal *'),
+      (7, 'copy *'),
+      (6, 'dir *'),
+      (5, 'read'),
+      (4, 'clear counters *'),
+      (3, 'show *'),
+      (2, 'traceroute *'),
+      (1, 'ping *')
+  ] %}
+  {% for rule in rules %}
+  rule {{ rule[0] }} permit command {{ rule[1] }}
+  {% endfor %}
+
+banner motd ^
+
+T-Mobile USA, Inc. 2014 (C) All rights reserved.
+
+All use subject to applicable license agreements.
+
+This system is for the use of authorized users only. Everyone (Users) using
+
+this system consents to the terms and conditions hereunder. The use is for
+
+T-Mobile USA, Inc. (TMUS) authorized users only, and all use must be for TMUS
+
+business only. All data, content, software and other information (Data) on the
+
+system is owned or licensed by TMUS. Users should not disclose or otherwise use
+
+the Data except as expressly authorized by TMUS. No Data may be shared outside
+
+of TMUS systems unless expressly authorized by TMUS. TMUS may monitor Users
+
+usage. Users should contact T-Mobile National Help Desk at 877-878-7326 with
+
+any questions. Users in violation of these terms and conditions are subject to
+
+disciplinary or other action.
+
+^
+
+no ip domain-lookup
+ip domain-name t-mobile.net
+
+tacacs-server timeout 30
+tacacs-server host 10.255.62.201 key 7 
+tacacs-server host 10.253.11.233 key 7 
+
+aaa group server tacacs+ tacacs1 
+    server 10.255.62.201
+    server 10.253.11.233 
+    use-vrf management
+    source-interface mgmt0
+
+crypto key generate rsa label {{ hostname }}.T-MOBILE.NET modulus 2048
+
+
+spanning-tree mode mst
+ip access-list 3
+  10 remark Deny everything for NTP
+  20 deny ip any any 
+ip access-list 4
+  10 remark Permit NTP servers we sync to
+  20 permit udp 5.196.0.121/32 any 
+  30 permit udp 5.196.0.122/32 any 
+  40 permit udp 5.198.0.121/32 any 
+  50 permit udp 5.198.0.122/32 any 
+ip access-list SNMP-RO-NMNET
+  10 remark +----------------------------------------------------------------------
+  20 remark + SNMP Read-Only Acesss (NMNET)
+  30 remark +----------------------------------------------------------------------
+  40 permit ip 5.0.0.0/8 any 
+  50 permit ip 10.245.0.0/16 any 
+  60 permit ip 10.248.0.0/13 any
+  70 permit ip 10.240.0.0/13 any
+
+ip access-list SNMPv3-ACL
+10 remark Cacti(APM0103699)
+20 remark contact nppipperformance@t-mobile.com
+30 permit udp 10.253.129.0/24 any eq snmp
+40 remark !
+50 remark NetBrain(APM0102333)
+60 remark contact PIAOP@T-Mobile.com
+70 permit udp 10.251.210.186/32 any eq snmp
+80 permit udp 10.251.242.62/32 any eq snmp
+90 permit udp 10.255.175.1/32 any eq snmp
+100 permit udp 10.255.131.161/32 any eq snmp
+110 permit udp 10.251.211.0/25 any eq snmp
+120 permit udp 10.255.174.128/25 any eq snmp
+130 remark !
+140 remark NNMI(APM0101912)
+150 remark contact ESD_DevOps_NNMi@T-Mobile.com
+160 permit udp 10.254.199.0/26 any eq snmp
+170 permit udp 10.254.197.0/24 any eq snmp
+180 permit udp 10.252.195.0/26 any eq snmp
+190 permit udp 10.252.196.0/25 any eq snmp
+200 permit udp 10.246.89.64/26 any eq snmp
+210 permit udp 10.236.18.0/26 any eq snmp
+220 remark !
+230 remark SevOne(APM0101922)
+240 remark contact EIS_DevOps_SevOne@T-Mobile.com
+250 permit udp 10.247.136.0/24 any eq snmp
+260 permit udp 10.236.18.0/24 any eq snmp
+270 permit udp 10.237.48.0/26 any eq snmp
+280 permit udp 10.247.98.0/26 any eq snmp
+290 permit udp 10.247.116.0/26 any eq snmp
+300 permit udp 10.247.93.0/25 any eq snmp
+310 remark !
+320 remark SNOW(APM0103101)
+330 remark contact ServiceNow_Team_ITOM_Ops@T-Mobile.com
+340 permit udp 10.251.239.0/25 any eq snmp
+350 permit udp 10.252.194.0/26 any eq snmp
+360 permit udp 10.252.195.128/25 any eq snmp
+370 permit udp 10.252.196.64/25 any eq snmp
+380 permit udp 10.252.197.0/24 any eq snmp
+390 permit udp 10.252.199.0/24 any eq snmp
+400 permit udp 10.252.224.128/26 any eq snmp
+410 permit udp 10.252.255.0/26 any eq snmp
+420 permit udp 10.253.130.128/26 any eq snmp
+430 permit udp 10.254.193.0/24 any eq snmp
+440 permit udp 10.254.195.0/26 any eq snmp
+450 permit udp 10.254.196.0/26 any eq snmp
+460 permit udp 10.254.198.64/25 any eq snmp
+470 permit udp 10.254.201.128/25 any eq snmp
+480 permit udp 10.255.129.128/25 any eq snmp
+490 permit udp 10.255.131.0/25 any eq snmp
+500 permit udp 10.255.143.0/26 any eq snmp
+510 remark !
+520 remark NetMRI(APM0100391)
+530 remark contact EISPerformance@T-Mobile.com
+540 permit udp 10.255.237.0/24 any eq snmp
+550 permit udp 10.251.109.0/24 any eq snmp
+560 remark !
+570 remark MFNA(APM0100197)
+580 remark contact ESD_DevOps_NA@T-Mobile.com
+590 permit udp 10.236.16.0/24 any eq snmp
+600 permit udp 10.254.201.0/24 any eq snmp
+610 permit udp 10.247.92.0/26 any eq snmp
+620 permit udp 10.253.134.0/26 any eq snmp
+630 remark !
+640 remark Tenable(APM0103909)
+650 remark contact VulnerabilityManagement2@T-Mobile.com
+660 permit udp 10.247.117.0/26 any eq snmp
+670 permit udp 10.255.233.0/26 any eq snmp
+680 permit udp 10.236.245.0/26 any eq snmp
+690 permit udp 10.237.32.0/26 any eq snmp
+700 remark !
+710 remark JumpboxandMISCtoolingservers
+720 permit udp 10.252.197.115/32 any eq snmp
+730 permit udp 10.246.152.38/32 any eq snmp
+740 permit udp 10.247.222.21/32 any eq snmp
+750 permit udp 10.253.135.10/32 any eq snmp
+760 permit udp 10.251.106.22/32 any eq snmp
+770 permit udp 10.253.84.86/32 any eq snmp
+780 remark !
+790 remark Network Services Orchestrator (APM0102514)
+800 remark contact PIAOP@T-Mobile.com
+810 permit udp 10.247.137.0/24 any eq snmp
+820 permit udp 10.251.82.0/24 any eq snmp
+830 permit udp 10.251.227.0/26 any eq snmp
+840 permit udp 10.252.159.0/26 any eq snmp
+850 permit udp 10.252.196.0/24 any eq snmp
+860 permit udp 10.246.95.9/32 any eq snmp
+870 permit udp 10.252.158.0/24 any eq snmp
+880 permit udp 10.254.247.0/24 any eq snmp
+890 permit udp 10.251.226.0/24 any eq snmp
+900 permit udp 10.246.89.240/28 any eq snmp
+910 permit udp 10.251.83.0/24 any eq snmp
+920 permit udp 10.252.231.0/24 any eq snmp
+930 permit udp 10.254.246.0/26 any eq snmp
+940 permit udp 5.220.5.220/32 any eq snmp
+ip access-list ssh-only
+10 remark ZTNA-Zscaler Private Access (APM0500716)
+20 remark Contact ZscalerTeam@T-Mobile.com
+30 permit tcp 10.247.14.0/24 any eq 22
+40 permit tcp 10.237.55.128/26 any eq 22
+50 permit tcp 10.238.168.0/24 any eq 22
+60 permit tcp 10.238.169.0/24 any eq 22
+70 permit tcp 10.238.12.0/24 any eq 22
+80 remark !
+90 remark Appgate Appgate SDP (APM0103345)
+100 remark Contact SDPSupportCoreTeam@T-Mobile.com
+110 permit tcp 10.247.12.0/24 any eq 22
+120 permit tcp 10.247.13.0/24 any eq 22
+130 permit tcp 10.237.58.0/24 any eq 22
+140 permit tcp 10.237.59.0/24 any eq 22
+150 remark !
+160 remark NSO/SevOne/Cacti
+170 remark Network Services Orchestrator (APM0102514)
+180 remark Contact PIAOP@T-Mobile.com
+190 remark EIS Performance Management Tools (APM0103067)
+200 remark Contact EISPerformance@T-Mobile.com
+210 remark Cacti(APM0103699)
+220 remark Contact nppipperformance@t-mobile.com
+230 permit tcp 10.247.137.0/24 any eq 22
+240 permit tcp 10.251.82.0/24 any eq 22
+250 permit tcp 10.251.227.0/26 any eq 22
+260 permit tcp 10.252.159.0/26 any eq 22
+270 permit tcp 10.252.196.128/29 any eq 22
+280 permit tcp 10.247.67.0/24 any eq 22
+290 permit tcp 10.246.95.9/32 any eq 22
+300 permit tcp 10.247.93.0/25 any eq 22
+310 permit tcp 10.254.246.59/32 any eq 22
+320 permit tcp 10.252.158.0/24 any eq 22
+330 permit tcp 10.254.247.0/24 any eq 22
+340 permit tcp 10.251.226.0/24 any eq 22
+350 permit tcp 10.246.89.240/28 any eq 22
+360 permit tcp 10.251.83.0/24 any eq 22
+370 permit tcp 10.247.136.0/24 any eq 22
+380 permit tcp 10.252.231.0/24 any eq 22
+390 permit tcp 10.253.129.0/24 any eq 22
+400 permit tcp 10.254.246.0/28 any eq 22
+410 permit tcp 10.254.199.252/32 any eq 22
+420 permit tcp 10.255.51.91/32 any eq 22
+430 remark !
+440 remark tenable/MFNA/CyberArk/AAP
+450 remark Tenable.io (APM0103909)
+460 remark contact VulnerabilityManagement2@T-Mobile.com
+470 remark MF NA (APM0100197)
+480 remark Contact ESD_DevOps_NA@T-Mobile.com
+490 remark CyberArk (APM0102526)
+500 remark Contact
+510 remark Ansible Automation Platform (APM0103826)
+520 remark Contact ISA-Platform_Support@T-Mobile.com
+530 permit tcp 10.247.117.0/26 any eq 22
+540 permit tcp 10.255.233.0/26 any eq 22
+550 permit tcp 10.236.16.0/24 any eq 22
+560 permit tcp 10.236.245.0/26 any eq 22
+570 permit tcp 10.237.32.0/26 any eq 22
+580 permit tcp 10.254.201.0/24 any eq 22
+590 permit tcp 10.247.92.0/26 any eq 22
+600 permit tcp 10.253.134.0/26 any eq 22
+610 permit tcp 10.251.106.0/24 any eq 22
+620 permit tcp 10.255.234.64/26 any eq 22
+630 permit tcp 10.255.91.0/24 any eq 22
+640 permit tcp 10.254.197.128/26 any eq 22
+650 permit tcp 10.254.195.0/26 any eq 22
+660 permit tcp 10.254.193.0/25 any eq 22
+670 permit tcp 10.255.143.0/24 any eq 22
+680 permit tcp 10.253.91.0/24 any eq 22
+690 permit tcp 10.251.239.0/24 any eq 22
+700 remark !
+710 remark NetBrain (APM0102333)
+720 remark contact PIAOP@T-Mobile.com
+730 permit tcp 10.251.210.186/32 any eq 22
+740 permit tcp 10.251.242.62/32 any eq 22
+750 permit tcp 10.255.175.1/32 any eq 22
+760 permit tcp 10.255.131.161/32 any eq 22
+770 permit tcp 10.251.211.0/25 any eq 22
+780 permit tcp 10.255.174.128/25 any eq 22
+790 remark !
+800 remark LMTS
+810 remark Last Mile Transport Scripting (APM0102982)
+820 remark contact CoreIP-TransportArchitectureandDesign@T-Mobile.com
+830 permit tcp 10.251.107.112/32 any eq 22
+840 permit tcp 10.253.129.115/32 any eq 22
+850 permit tcp 10.253.164.141/32 any eq 22
+860 remark !
+870 remark NetMRI
+880 permit tcp 10.255.237.0/24 any eq 22
+890 permit tcp 10.251.109.0/24 any eq 22
+900 remark !
+910 remark Jumpbox and MISC tooling servers
+920 permit tcp 10.252.197.115/32 any eq 22
+930 permit tcp 10.246.152.38/32 any eq 22
+940 permit tcp 10.247.222.21/32 any eq 22
+950 permit tcp 10.253.135.10/32 any eq 22
+960 permit tcp 10.253.84.86/32 any eq 22
+970 permit tcp 10.254.197.46/32 any eq 22
+980 permit tcp 5.220.5.220/32 any eq 22
+990 permit tcp 10.246.89.209/32 any eq 22
+1000 permit tcp 10.251.82.168/32 any eq 22
+
+ip access-list copp-acl-auto-rp-custom
+  10 permit ip any 224.0.1.39/32 
+  20 permit ip any 224.0.1.40/32 
+ip access-list copp-acl-bgp-custom
+  10 permit tcp any gt 1023 any eq bgp 
+  20 permit tcp any eq bgp any gt 1023 
+ipv6 access-list copp-acl-bgp6-custom
+  10 permit tcp any gt 1023 any eq bgp 
+  20 permit tcp any eq bgp any gt 1023 
+ip access-list copp-acl-dhcp-custom
+  10 permit udp any eq bootpc any 
+  20 permit udp any neq bootps any eq bootps 
+ip access-list copp-acl-dhcp-relay-response-custom
+  10 permit udp any eq bootps any 
+  20 permit udp any any eq bootpc 
+ipv6 access-list copp-acl-dhcp6-custom
+  10 permit udp any eq 546 any 
+  20 permit udp any any eq 547 
+ipv6 access-list copp-acl-dhcp6-relay-response-custom
+  10 permit udp any eq 547 any 
+  20 permit udp any any eq 546 
+ip access-list copp-acl-dns
+  10 permit udp any eq domain any 
+  20 permit udp any any eq domain 
+ip access-list copp-acl-eigrp-custom
+  10 permit eigrp any any 
+ipv6 access-list copp-acl-eigrp6-custom
+  10 permit eigrp any any 
+ip access-list copp-acl-ftp-custom
+  10 permit tcp any any eq ftp-data 
+  20 permit tcp any any eq ftp 
+  30 permit tcp any eq ftp-data any 
+  40 permit tcp any eq ftp any 
+ip access-list copp-acl-hsrp-custom
+  10 permit udp any 224.0.0.0/24 eq 1985 
+ipv6 access-list copp-acl-hsrp6-custom
+  10 permit udp any ff02::66/128 eq 2029 
+ip access-list copp-acl-http-custom
+  10 permit tcp any eq www any 
+  20 permit tcp any any eq www 
+ip access-list copp-acl-https-custom
+  10 permit tcp any eq 443 any 
+  20 permit tcp any any eq 443 
+ip access-list copp-acl-icmp-custom
+  10 permit icmp any any echo 
+  20 permit icmp any any echo-reply 
+ipv6 access-list copp-acl-icmp6-custom
+  10 permit icmp any any echo-request 
+  20 permit icmp any any echo-reply 
+ip access-list copp-acl-igmp-custom
+  10 permit igmp any 224.0.0.0/3 
+mac access-list copp-acl-mac-cdp-udld-vtp-custom
+  10 permit any 0100.0ccc.cccc 0000.0000.0000 
+mac access-list copp-acl-mac-cfsoe-custom
+  10 permit any 0180.c200.000e 0000.0000.0000 0x8843 
+  20 permit any 0180.c200.000e 0000.0000.0000 
+mac access-list copp-acl-mac-dot1x-custom
+  10 permit any 0180.c200.0003 0000.0000.0000 0x888e 
+mac access-list copp-acl-mac-fcoe-custom
+  10 permit any any 0x8906 
+  20 permit any any 0x8914 
+mac access-list copp-acl-mac-l2-tunnel-custom
+  10 permit any any 0x8840 
+mac access-list copp-acl-mac-l2pt-custom
+  10 permit any 0100.0ccd.cdd0 0000.0000.0000 
+mac access-list copp-acl-mac-l3-isis-custom
+  10 permit any 0180.c200.0015 0000.0000.0000 
+  20 permit any 0180.c200.0014 0000.0000.0000 
+  30 permit any 0900.2b00.0005 0000.0000.0000 
+  40 permit any 0900.2b00.0004 0000.0000.0000 
+mac access-list copp-acl-mac-lacp-custom
+  10 permit any 0180.c200.0002 0000.0000.0000 0x8809 
+mac access-list copp-acl-mac-lldp-custom
+  10 permit any 0180.c200.000e 0000.0000.0000 0x88cc 
+mac access-list copp-acl-mac-sdp-srp-custom
+  10 permit any 0180.c200.000e 0000.0000.0000 0x3401 
+mac access-list copp-acl-mac-stp-custom
+  10 permit any 0100.0ccc.cccd 0000.0000.0000 
+  20 permit any 0180.c200.0000 0000.0000.0000 
+mac access-list copp-acl-mac-undesirable-custom
+  10 permit any any 
+ipv6 access-list copp-acl-mld-custom
+  10 permit icmp any any mld-query 
+  20 permit icmp any any mld-report 
+  30 permit icmp any any mld-reduction 
+  40 permit icmp any any mldv2 
+ip access-list copp-acl-msdp-custom
+  10 permit tcp any gt 1023 any eq 639 
+  20 permit tcp any eq 639 any gt 1023 
+ipv6 access-list copp-acl-ndp-custom
+  10 permit icmp any any router-solicitation 
+  20 permit icmp any any router-advertisement 
+  30 permit icmp any any nd-ns 
+  40 permit icmp any any nd-na 
+ip access-list copp-acl-ntp-custom
+  10 permit udp any any eq ntp 
+  20 permit udp any eq ntp any 
+ipv6 access-list copp-acl-ntp6-custom
+  10 permit udp any any eq ntp 
+  20 permit udp any eq ntp any 
+ip access-list copp-acl-openflow-custom
+  10 permit tcp any eq 6653 any 
+ip access-list copp-acl-ospf-custom
+  10 permit ospf any any 
+ipv6 access-list copp-acl-ospf6-custom
+  10 permit 89 any any 
+ip access-list copp-acl-pim-custom
+  10 permit pim any 224.0.0.0/24 
+  20 permit udp any any eq pim-auto-rp 
+  30 permit ip any 224.0.0.13/32 
+ip access-list copp-acl-pim-mdt-join-custom
+  10 permit udp any 224.0.0.13/32 
+ip access-list copp-acl-pim-reg-custom
+  10 permit pim any any 
+ipv6 access-list copp-acl-pim6-custom
+  10 permit pim any ff02::d/128 
+  20 permit udp any any eq pim-auto-rp 
+ipv6 access-list copp-acl-pim6-reg-custom
+  10 permit pim any any 
+ip access-list copp-acl-ptp-custom
+  10 permit udp any 224.0.1.129/32 eq 319 
+  20 permit udp any 224.0.1.129/32 eq 320 
+ip access-list copp-acl-radius-custom
+  10 permit udp any any eq 1812 
+  20 permit udp any any eq 1813 
+  30 permit udp any any eq 1645 
+  40 permit udp any any eq 1646 
+  50 permit udp any eq 1812 any 
+  60 permit udp any eq 1813 any 
+  70 permit udp any eq 1645 any 
+  80 permit udp any eq 1646 any 
+ipv6 access-list copp-acl-radius6-custom
+  10 permit udp any any eq 1812 
+  20 permit udp any any eq 1813 
+  30 permit udp any any eq 1645 
+  40 permit udp any any eq 1646 
+  50 permit udp any eq 1812 any 
+  60 permit udp any eq 1813 any 
+  70 permit udp any eq 1645 any 
+  80 permit udp any eq 1646 any 
+ip access-list copp-acl-rip-custom
+  10 permit udp any 224.0.0.0/24 eq rip 
+ipv6 access-list copp-acl-rip6-custom
+  10 permit udp any ff02::9/64 eq 521 
+ip access-list copp-acl-sftp-custom
+  10 permit tcp any any eq 115 
+  20 permit tcp any eq 115 any 
+ip access-list copp-acl-snmp-custom
+  10 permit udp any any eq snmp 
+  20 permit udp any any eq snmptrap 
+  30 permit tcp any any eq 161 
+  40 permit tcp any any eq 162 
+ipv6 access-list copp-acl-snmp6-custom
+  10 permit udp any any eq snmp 
+  20 permit udp any any eq snmptrap 
+  30 permit tcp any any eq 161 
+  40 permit tcp any any eq 162 
+ip access-list copp-acl-ssh-custom
+  10 permit tcp any any eq 22 
+  20 permit tcp any eq 22 any 
+ipv6 access-list copp-acl-ssh6-custom
+  10 permit tcp any any eq 22 
+  20 permit tcp any eq 22 any 
+ip access-list copp-acl-tacacs-custom
+  10 permit tcp any any eq tacacs 
+  20 permit tcp any eq tacacs any 
+ipv6 access-list copp-acl-tacacs6-custom
+  10 permit tcp any any eq tacacs 
+  20 permit tcp any eq tacacs any 
+ip access-list copp-acl-telnet-custom
+  10 permit tcp any any eq telnet 
+  20 permit tcp any any eq 107 
+  30 permit tcp any eq telnet any 
+  40 permit tcp any eq 107 any 
+ipv6 access-list copp-acl-telnet6-custom
+  10 permit tcp any any eq telnet 
+  20 permit tcp any any eq 107 
+  30 permit tcp any eq telnet any 
+  40 permit tcp any eq 107 any 
+ip access-list copp-acl-tftp-custom
+  10 permit udp any any eq tftp 
+  20 permit udp any any eq 1758 
+  30 permit udp any eq tftp any 
+  40 permit udp any eq 1758 any 
+ipv6 access-list copp-acl-tftp6-custom
+  10 permit udp any any eq tftp 
+  20 permit udp any any eq 1758 
+  30 permit udp any eq tftp any 
+  40 permit udp any eq 1758 any 
+ip access-list copp-acl-traceroute-custom
+  10 permit icmp any any ttl-exceeded 
+  20 permit icmp any any port-unreachable 
+  30 permit udp any any range 33434 33534 
+ip access-list copp-acl-undesirable-custom
+  10 permit udp any any eq 1434 
+ip access-list copp-acl-vpc-custom
+  10 permit udp any any eq 3200 
+ip access-list copp-acl-vrrp-custom
+  10 permit ip any 224.0.0.18/32 
+ipv6 access-list copp-acl-vrrp6-custom
+  10 permit ipv6 any ff02::12/128 
+ip access-list set-dscp-best-effort
+  10 permit ip any any 
+ip access-list set-dscp-bronze
+  10 deny ip any any 
+ip access-list set-dscp-gold
+  10 deny ip any any 
+ip access-list set-dscp-silver
+  10 deny ip any any 
+
+system qos
+  service-policy type network-qos jumbo
+
+class-map type control-plane match-any copp-class-critical-custom
+  match access-group name copp-acl-bgp-custom
+  match access-group name copp-acl-rip-custom
+  match access-group name copp-acl-vpc-custom
+  match access-group name copp-acl-bgp6-custom
+  match access-group name copp-acl-ospf-custom
+  match access-group name copp-acl-rip6-custom
+  match access-group name copp-acl-eigrp-custom
+  match access-group name copp-acl-ospf6-custom
+  match access-group name copp-acl-eigrp6-custom
+  match access-group name copp-acl-auto-rp-custom
+  match access-group name copp-acl-mac-l2pt-custom
+  match access-group name copp-acl-mac-l3-isis-custom
+class-map type control-plane match-any copp-class-exception-custom
+  match exception ip option
+  match exception ip icmp unreachable
+  match exception ipv6 option
+  match exception ipv6 icmp unreachable
+class-map type control-plane match-any copp-class-exception-diag-custom
+  match exception ttl-failure
+  match exception mtu-failure
+class-map type control-plane match-any copp-class-fcoe-custom
+  match access-group name copp-acl-mac-fcoe-custom
+class-map type control-plane match-any copp-class-important-custom
+  match access-group name copp-acl-hsrp-custom
+  match access-group name copp-acl-vrrp-custom
+  match access-group name copp-acl-hsrp6-custom
+  match access-group name copp-acl-vrrp6-custom
+  match access-group name copp-acl-mac-lldp-custom
+class-map type control-plane match-any copp-class-l2-default-custom
+  match access-group name copp-acl-mac-undesirable-custom
+class-map type control-plane match-any copp-class-l2-unpoliced-custom
+  match access-group name copp-acl-mac-stp-custom
+  match access-group name copp-acl-mac-lacp-custom
+  match access-group name copp-acl-mac-cfsoe-custom
+  match access-group name copp-acl-mac-sdp-srp-custom
+  match access-group name copp-acl-mac-l2-tunnel-custom
+  match access-group name copp-acl-mac-cdp-udld-vtp-custom
+class-map type control-plane match-any copp-class-l3mc-data-custom
+  match exception multicast rpf-failure
+  match exception multicast dest-miss
+class-map type control-plane match-any copp-class-l3mcv6-data-custom
+  match exception multicast ipv6-rpf-failure
+  match exception multicast ipv6-dest-miss
+class-map type control-plane match-any copp-class-l3uc-data-custom
+  match exception glean
+class-map type control-plane match-any copp-class-management-custom
+  match access-group name copp-acl-ftp-custom
+  match access-group name copp-acl-ntp-custom
+  match access-group name copp-acl-ssh-custom
+  match access-group name copp-acl-http-custom
+  match access-group name copp-acl-ntp6-custom
+  match access-group name copp-acl-sftp-custom
+  match access-group name copp-acl-snmp-custom
+  match access-group name copp-acl-ssh6-custom
+  match access-group name copp-acl-tftp-custom
+  match access-group name copp-acl-https-custom
+  match access-group name copp-acl-snmp6-custom
+  match access-group name copp-acl-tftp6-custom
+  match access-group name copp-acl-radius-custom
+  match access-group name copp-acl-tacacs-custom
+  match access-group name copp-acl-telnet-custom
+  match access-group name copp-acl-radius6-custom
+  match access-group name copp-acl-tacacs6-custom
+  match access-group name copp-acl-telnet6-custom
+class-map type control-plane match-any copp-class-monitoring-custom
+  match access-group name copp-acl-icmp-custom
+  match access-group name copp-acl-icmp6-custom
+  match access-group name copp-acl-traceroute-custom
+class-map type control-plane match-any copp-class-multicast-host-custom
+  match access-group name copp-acl-mld-custom
+class-map type control-plane match-any copp-class-multicast-router-custom
+  match access-group name copp-acl-pim-custom
+  match access-group name copp-acl-msdp-custom
+  match access-group name copp-acl-pim6-custom
+  match access-group name copp-acl-pim-reg-custom
+  match access-group name copp-acl-pim6-reg-custom
+  match access-group name copp-acl-pim-mdt-join-custom
+class-map type control-plane match-any copp-class-nat-flow-custom
+  match exception nat-flow
+class-map type control-plane match-any copp-class-ndp-custom
+  match access-group name copp-acl-ndp-custom
+class-map type control-plane match-any copp-class-normal-custom
+  match access-group name copp-acl-mac-dot1x-custom
+  match protocol arp
+class-map type control-plane match-any copp-class-normal-dhcp-custom
+  match access-group name copp-acl-dhcp-custom
+  match access-group name copp-acl-dhcp6-custom
+class-map type control-plane match-any copp-class-normal-dhcp-relay-response-custom
+  match access-group name copp-acl-dhcp-relay-response-custom
+  match access-group name copp-acl-dhcp6-relay-response-custom
+class-map type control-plane match-any copp-class-normal-igmp-custom
+  match access-group name copp-acl-igmp-custom
+class-map type control-plane match-any copp-class-openflow-custom
+  match access-group name copp-acl-openflow-custom
+class-map type control-plane match-any copp-class-redirect-custom
+  match access-group name copp-acl-ptp-custom
+class-map type control-plane match-any copp-class-undesirable-custom
+  match access-group name copp-acl-undesirable-custom
+  match exception multicast sg-rpf-failure
+class-map type control-plane match-any copp-class-undesirablev6-custom
+  match exception multicast ipv6-sg-rpf-failure
+policy-map type control-plane copp-policy-strict-custom 
+  class copp-class-l3uc-data-custom
+    set cos 1 
+    police cir 800 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-critical-custom
+    set cos 7 
+    police cir 36000 kbps bc 1280000 bytes conform transmit violate drop 
+  class copp-class-important-custom
+    set cos 6 
+    police cir 2500 kbps bc 1280000 bytes conform transmit violate drop 
+  class copp-class-openflow-custom
+    set cos 5 
+    police cir 1000 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-multicast-router-custom
+    set cos 6 
+    police cir 2600 kbps bc 128000 bytes conform transmit violate drop 
+  class copp-class-multicast-host-custom
+    set cos 1 
+    police cir 1000 kbps bc 128000 bytes conform transmit violate drop 
+  class copp-class-l3mc-data-custom
+    set cos 1 
+    police cir 2400 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-normal-custom
+    set cos 1 
+    police cir 1400 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-ndp-custom
+    set cos 6 
+    police cir 1400 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-normal-dhcp-custom
+    set cos 1 
+    police cir 1300 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-normal-dhcp-relay-response-custom
+    set cos 1 
+    police cir 1500 kbps bc 64000 bytes conform transmit violate drop 
+  class copp-class-normal-igmp-custom
+    set cos 3 
+    police cir 3000 kbps bc 64000 bytes conform transmit violate drop 
+  class copp-class-redirect-custom
+    set cos 1 
+    police cir 280 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-exception-custom
+    set cos 1 
+    police cir 150 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-exception-diag-custom
+    set cos 1 
+    police cir 150 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-management-custom
+    set cos 2 
+    police cir 0 bps bc 0 bytes conform transmit violate drop 
+  class copp-class-monitoring-custom
+    set cos 1 
+    police cir 360 kbps bc 128000 bytes conform transmit violate drop 
+  class copp-class-l2-unpoliced-custom
+    set cos 7 
+    police cir 50 mbps bc 8192000 bytes conform transmit violate drop 
+  class copp-class-undesirable-custom
+    set cos 0 
+    police cir 200 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-fcoe-custom
+    set cos 6 
+    police cir 1060 kbps bc 1280000 bytes conform transmit violate drop 
+  class copp-class-nat-flow-custom
+    set cos 7 
+    police cir 800 kbps bc 64000 bytes conform transmit violate drop 
+  class copp-class-l3mcv6-data-custom
+    set cos 1 
+    police cir 2400 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-undesirablev6-custom
+    set cos 0 
+    police cir 200 kbps bc 32000 bytes conform transmit violate drop 
+  class copp-class-l2-default-custom
+    set cos 0 
+    police cir 400 kbps bc 32000 bytes conform transmit violate drop 
+  class class-default
+    set cos 0 
+    police cir 400 kbps bc 32000 bytes conform transmit violate drop 
+class-map type qos match-any set-dscp-gold
+  match access-group name set-dscp-gold
+class-map type qos match-any set-dscp-bronze
+  match access-group name set-dscp-bronze
+class-map type qos match-any set-dscp-silver
+  match access-group name set-dscp-silver
+class-map type qos match-any set-dscp-best-effort
+  match access-group name set-dscp-best-effort
+policy-map type qos set-dscp-all
+  class set-dscp-gold
+    set dscp 46
+    set qos-group 1
+  class set-dscp-silver
+    set dscp 36
+    set qos-group 2
+  class set-dscp-bronze
+    set dscp 26
+    set qos-group 3
+  class set-dscp-best-effort
+    set dscp 0
+    set qos-group 4
+  class class-default
+
+policy-map type qos Q-I-SET-DSCP-DEFAULT
+  class class-default
+    set dscp 0
+
+control-plane
+  service-policy input copp-policy-strict-custom 
+yes
+
+
+snmp-server contact TierII IP Support 1-866-783-9557 Option 4
+snmp-server user ops network-admin auth md5 057AD8D52D6F6629DB6414E053AC6189F648 priv aes-128 5301A1B85A33676E9F150DCFC930FC2AF95E localizedV2key
+snmp-server user admin network-admin auth md5 006083933AA7B2D552FB2EA12364110B40B3 priv aes-128 365A9F823DACC4934B87219F7A7A100E0BD2 localizedV2key
+snmp-server user gNxJaxcSgPH1NMx0ahtfWGolDwcQ network-operator auth sha 496279543165E686320BC697BC9D2618140D08604A7B priv aes-128 2175A42B4C24B97D60CC8DEB18598C35C24D4098B06D localizedV2key
+snmp-server user qXGVS61VPtcVZU9Ryv63b8xXxYwe network-operator auth sha vKaSFTS5!zC5dy1cvtX2!wBq6fhN priv aes-128 RzHgSVhKH!74V9PYV6N!rc6IHWjs localizedV2key
+snmp-server user gNxJaxcSgPH1NMx0ahtfWGolDwcQ use-ipv4acl SNMPv3-ACL
+snmp-server user qXGVS61VPtcVZU9Ryv63b8xXxYwe use-ipv4acl SNMPv3-ACL
+snmp-server host 10.254.199.12 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host 10.254.199.12 use-vrf management
+snmp-server host 10.254.199.12 source-interface mgmt0
+snmp-server host 10.254.199.13 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host 10.254.199.13 use-vrf management
+snmp-server host 10.254.199.13 source-interface mgmt0
+snmp-server host 10.252.195.11 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host 10.252.195.11 use-vrf management
+snmp-server host 10.252.195.11 source-interface mgmt0
+snmp-server host 10.252.195.12 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host 10.252.195.12 use-vrf management
+snmp-server host 10.252.195.12 source-interface mgmt0
+snmp-server host fd02:976a:b699:c03::14 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host fd02:976a:b699:c03::14 use-vrf management
+snmp-server host fd02:976a:b699:c03::14 source-interface mgmt0
+snmp-server host fd02:976a:b699:c03::15 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host fd02:976a:b699:c03::15 use-vrf management
+snmp-server host fd02:976a:b699:c03::15 source-interface mgmt0
+snmp-server host fd02:976a:d6b7:803::14 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host fd02:976a:d6b7:803::14 use-vrf management
+snmp-server host fd02:976a:d6b7:803::14 source-interface mgmt0
+snmp-server host fd02:976a:d6b7:803::15 traps version 3 priv qXGVS61VPtcVZU9Ryv63b8xXxYwe
+snmp-server host fd02:976a:d6b7:803::15 use-vrf management
+snmp-server host fd02:976a:d6b7:803::15 source-interface mgmt0
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+snmp-server enable traps bgp
+snmp-server enable traps callhome event-notify
+snmp-server enable traps callhome smtp-send-fail
+snmp-server enable traps cfs state-change-notif
+snmp-server enable traps cfs merge-failure
+snmp-server enable traps aaa server-state-change
+snmp-server enable traps hsrp state-change
+snmp-server enable traps feature-control FeatureOpStatusChange
+snmp-server enable traps config ccmCLIRunningConfigChanged
+snmp-server enable traps snmp authentication
+snmp-server enable traps bridge newroot
+snmp-server enable traps bridge topologychange
+snmp-server enable traps stpx inconsistency
+snmp-server enable traps stpx root-inconsistency
+snmp-server enable traps stpx loop-inconsistency
+snmp-server enable traps feature-control ciscoFeatOpStatusChange
+snmp-server source-interface traps mgmt 0
+
+ntp source-interface mgmt0
+ntp access-group peer 4
+ntp access-group serve 3
+ntp access-group query-only 3
+aaa authentication login default group tacacs1 local 
+aaa authorization config-commands default group tacacs1 local 
+aaa authorization commands default group tacacs1 local 
+aaa accounting default group tacacs1 
+aaa authentication login error-enable 
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause link-flap
+
+
+
+ip pim ssm range 232.0.0.0/8
+ip arp timeout 3600
+
+spanning-tree pathcost method long
+spanning-tree port type edge default
+spanning-tree port type edge bpduguard default
+
+spanning-tree mst configuration
+  name TMO_MST
+
+
+logging timestamp milliseconds
+no logging console
+
+interface loopback101
+  description HSRP Control Interface Loopback101
+icam monitor scale
+
+line console
+  exec-timeout 15
+line vty
+  exec-timeout 15
+  access-class ssh-only in
+
+cli alias name sir show ip route
+cli alias name srb sho run | beg
+cli alias name sri sho run | inc
+cli alias name son sho ip ospf nei
+cli alias name sr sho run
+cli alias name sirc sho ip route vrf cos
+cli alias name sli show log | include
+cli alias name sle show log | exclude
+cli alias name wr copy run start
+!
+
+bfd interval 250 min_rx 250 multiplier 3
+!
+===========================
+
+# Device specific configuration#
+
+logging server 10.253.182.93 use-vrf management facility kern
+logging server 10.255.160.63 use-vrf management facility kern
+logging origin-id string 5.195.32.20
+
+spanning-tree mst 0 priority 24576
+
+ntp server 5.196.0.121 use-vrf management
+ntp server 5.198.0.121 use-vrf management
+
+vtp domain NVL
+
+snmp-server location 3800 EZELLE DRIVE, NASHVILLE, TN 37211
+
+track 1 interface port-channel1 line-protocol
+track 101  interface loopback101 line-protocol
+  
+!
+vrf context METROE-E
+ rd 10.169.2.113:200
+!
+
+ip ssh source-interface mgmt0
+!
+
+================================
+
+# vlan and route cmds
+
+!
+vlan 111
+ name ASB_10.177.27.232/30
+!
+vlan 202
+ name DSCNVL11_Global
+!
+vlan 308
+ name DSCNVL11_VRF_METROE-E
+!
+vlan 1538
+ name NET_ASBNVL_Interconnect_VRF_METR
+!
+vlan 1701
+ name NVBSC071_ETPE_Pabis
+!
+vlan 1702
+ name NVBSC071_ETPA_AoIP
+!
+vlan 1703
+ name NVBSC071_ETIP_DS0LMU
+!
+vlan 1705
+ name NVBSC071_SWU0_Global
+!
+vlan 1707
+ name NVBSC071_SWU0_METROE-E
+!
+vlan 1708
+ name NVBSC071_ETIP_MANA0_10.166.56.96
+!
+vlan 1711
+ name KXBSC071_ETPE_PAbis
+!
+vlan 1712
+ name KXBSC071_ETPA_AoIP
+!
+vlan 1713
+ name KXBSC071_ETIP_DS0LMU
+!
+vlan 1715
+ name KXBSC071_SWU0_Global
+!
+vlan 1717
+ name KXBSC071_SWU0_METROE-E
+!
+vlan 1718
+ name KXBSC071_ETIP_MANA0_10.168.152.9
+!
+
+
+ip route 10.166.56.64 255.255.255.240 Vlan1705 10.166.56.178 name WO1571089_NVBSC071_SIGTRAN1
+ip route 10.168.152.64 255.255.255.240 Vlan1715 10.168.152.178 name WO1804895_KXBSC071_SIGTRAN1
+
+!
+vrf context management
+  ip route 5.0.0.0 255.0.0.0 5.195.32.1
+  ip route 10.240.0.0 255.248.0.0 5.195.32.1
+  ip route 10.248.0.0 255.248.0.0 5.195.32.1
+!
+vrf context METROE-E
+ip route 10.166.56.112 255.255.255.240 Vlan1707 10.166.56.182 name NVBSC071_TRXSIG
+ip route 10.168.152.112 255.255.255.240 Vlan1717 10.168.152.182 name KXBSC071_TRXSIG
+ip route static bfd Vlan1707 10.166.56.182
+ip route static bfd Vlan1717 10.168.152.182
+!
+
+!
+ip prefix-list BSC_to_BTS_Subnets seq 5 permit 10.166.56.96/28
+ip prefix-list BSC_to_BTS_Subnets seq 10 permit 10.166.56.112/28
+ip prefix-list BSC_to_BTS_Subnets seq 15 permit 10.166.56.128/28
+ip prefix-list BSC_to_BTS_Subnets seq 20 permit 10.166.56.160/28
+ip prefix-list BSC_to_BTS_Subnets seq 25 permit 10.166.56.180/30
+ip prefix-list BSC_to_BTS_Subnets seq 30 permit 10.166.56.188/30
+ip prefix-list BSC_to_BTS_Subnets seq 35 permit 10.177.27.244/30
+ip prefix-list BSC_to_BTS_Subnets seq 40 permit 10.177.27.252/30
+ip prefix-list BSC_to_BTS_Subnets seq 45 permit 10.177.27.236/30
+ip prefix-list BSC_to_BTS_Subnets seq 50 permit 5.64.73.48/28
+ip prefix-list BSC_to_BTS_Subnets seq 55 permit 10.168.152.112/28
+ip prefix-list BSC_to_BTS_Subnets seq 60 permit 10.168.152.128/28
+ip prefix-list BSC_to_BTS_Subnets seq 65 permit 10.168.152.160/28
+ip prefix-list BSC_to_BTS_Subnets seq 70 permit 10.168.152.180/30
+ip prefix-list BSC_to_BTS_Subnets seq 75 permit 10.168.152.188/30
+!
+ip prefix-list SIGTRAN seq 5 permit 10.166.56.64/28
+ip prefix-list SIGTRAN seq 10 permit 10.166.56.80/28
+ip prefix-list SIGTRAN seq 15 permit 10.168.152.64/28
+ip prefix-list SIGTRAN seq 20 permit 10.168.152.80/28
+!
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.166.56.112/28 
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.168.152.112/28
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.166.56.128/28 
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.166.56.180/30 
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.168.152.128/28
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.168.152.180/30
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.177.27.236/30 
+ip prefix-list SB-IPV4-METROE-ASSIGNED-SPACE permit 10.177.27.244/30
+!
+route-map SB-IPV4-METROE-ASSIGNED-SPACE permit 10
+  match ip address prefix-list SB-IPV4-METROE-ASSIGNED-SPACE 
+!
+route-map SET_COMM deny 10
+ match ip address prefix-list BSC_to_BTS_Subnets
+!
+route-map SET_COMM permit 20
+ match ip address prefix-list SIGTRAN
+ set community 65138:109 65138:1064
+!
+route-map SET_COMM permit 30
+ set community 65138:109 65138:1064
+!
+!
+{% for interface in interfaces if interface.name.lower() == "fastethernet1" %}
+interface mgmt0
+ description {{ interface.description }}
+ {% if interface.vrf != "N/A" %}
+ vrf member {{ interface.vrf }}
+ {% endif %}
+ {% if interface.ip_address != "N/A" %}
+ ip address {{ interface.ip_address }} {{ interface.subnet_mask }}
+ {% endif %}
+ no shut
+!
+{% endfor %}
+!
+logging source-interface mgmt0
+!
+interface eth1/2-54
+ switchport
+
+!
+{% for interface in interfaces -%}
+  {% if interface.name.lower() == "fastethernet1" -%}
+interface mgmt0
+ description {{ interface.description }}
+    {%- if interface.vrf != "N/A" %}
+ vrf member {{ interface.vrf }}
+    {%- endif %}
+    {%- if interface.ip_address != "N/A" %}
+ ip address {{ interface.ip_address }} {{ interface.subnet_mask }}
+    {%- endif %}
+ no shut
+!
+  {% endif -%}
+{% endfor %}
+
+{% for interface in interfaces if interface.name.lower().startswith("loopback") -%}
+interface {{ interface.name }}
+ description {{ interface.description }}
+    {%- if interface.ip_address != "N/A" %}
+ ip address {{ interface.ip_address }} {{ interface.subnet_mask }}
+    {%- else %}
+ no ip address
+    {%- endif %}
+!
+{% endfor %}
+!
+logging source-interface mgmt0
+!
+interface eth1/2-54
+ switchport
+!
+
+!
+{% for vlan in interfaces if vlan.name.lower() == "vlan111" %}
+{% set vlan_desc = vlan.description.split('_T')[0] %}
+interface Port-channel111
+ switchport
+ description 80G_Bundle_{{ vlan_desc }}_Po111
+ switchport trunk allowed vlan 111,1538,1701-1703,1708,1711-1713,1718
+ switchport mode trunk
+ mtu 1500
+ storm-control multicast level 0.10
+ storm-control broadcast level 0.10
+ storm-control action trap
+!
+interface Ethernet1/45
+ description {{ vlan_desc }}_T1/49 - Temp Link default this link after second night cut to E1/49
+ switchport trunk allowed vlan 111,1538,1701-1703,1708,1711-1713,1718
+ switchport mode trunk
+ mtu 1500
+ udld aggressive
+ storm-control multicast level 0.10
+ storm-control broadcast level 0.10
+ storm-control action trap
+ channel-group 111 mode active
+!
+interface Ethernet1/46
+ description {{ vlan_desc }}_T1/50 - Temp Link default this link after second night cut to E1/50
+ switchport trunk allowed vlan 111,1538,1701-1703,1708,1711-1713,1718
+ switchport mode trunk
+ mtu 1500
+ udld aggressive
+ storm-control multicast level 0.10
+ storm-control broadcast level 0.10
+ storm-control action trap
+ channel-group 111 mode active
+!
+interface Ethernet1/49
+ description {{ vlan_desc }}_T1/49
+ switchport trunk allowed vlan 111,1538,1701-1703,1708,1711-1713,1718
+ switchport mode trunk
+ mtu 9216
+ udld aggressive
+ storm-control multicast level 0.10
+ storm-control broadcast level 0.10
+ storm-control action trap
+ shutdown
+!
+interface Ethernet1/50
+ description {{ vlan_desc }}_T1/50
+ switchport trunk allowed vlan 111,1538,1701-1703,1708,1711-1713,1718
+ switchport mode trunk
+ mtu 9216
+ udld aggressive
+ storm-control multicast level 0.10
+ storm-control broadcast level 0.10
+ storm-control action trap
+ shutdown
+!
+{% endfor %}
+!
+{% for interface in interfaces if interface.name.lower() == "tengigabitethernet1/50" %}
+{% set interface_desc = interface.description %}
+interface Port-channel1
+ description 10G_Bundle_{{ interface_desc }}
+ mtu 9202
+ no shutdown
+!
+{% endfor %}
+{% for vlan in interfaces if vlan.name.lower() == "vlan202" %}
+interface Port-channel1.202
+ description {{ vlan.description }}
+ mtu 9198
+ encapsulation dot1q 202
+ ip address {{ vlan.ip_address }} {{ vlan.subnet_mask }}
+ no ip redirects
+ bfd interval 250 min_rx 250 multiplier 3
+ no bfd echo
+ bfd
+ bfd per-link
+ ip arp timeout 1800
+ no shutdown
+!
+{% endfor %}
+!
+{% for vlan in interfaces if vlan.name.lower() == "vlan308" %}
+interface Port-channel1.308
+ description {{ vlan.description }}
+ mtu 9198
+ vrf member METROE-E
+ encapsulation dot1q 308
+ ip address {{ vlan.ip_address }} {{ vlan.subnet_mask }}
+ no ip redirects
+ bfd interval 250 min_rx 250 multiplier 3
+ no bfd echo
+ bfd
+ bfd per-link
+ ip arp timeout 1800
+ no shutdown
+!
+{% endfor %}
+!
+{% for interface in interfaces if interface.name.lower() == "tengigabitethernet1/50" %}
+{% set interface_desc = interface.description %}
+interface Eth1/1
+ description {{ interface_desc }}
+ mtu 9202
+ channel-group 1 mode active
+ no shutdown
+ {% endfor %}
+!
+{% for interface in interfaces if interface.name.lower() in ["gigabitethernet1/2", "gigabitethernet1/3", "gigabitethernet1/4", "gigabitethernet1/5", "gigabitethernet1/6", "gigabitethernet1/7", "gigabitethernet1/8", "gigabitethernet1/9", "gigabitethernet1/10", "gigabitethernet1/11"] %}
+interface Ethernet1/{{ interface.name.split('/')[-1] }}
+ description {{ interface.description }}
+ {%- if interface.name.lower() == "gigabitethernet1/2" %}
+ no switchport
+ ip address {{ interface.ip_address }} {{ interface.subnet_mask }}
+ ip ospf network point-to-point
+ ip ospf dead-interval 10
+ ip ospf hello-interval 3
+ ip ospf cost 100
+ {%- elif interface.name.lower() in ["gigabitethernet1/3", "gigabitethernet1/4", "gigabitethernet1/5", "gigabitethernet1/6"] %}
+ switchport access vlan 1702
+ switchport mode access
+ {%- elif interface.name.lower() in ["gigabitethernet1/7", "gigabitethernet1/8", "gigabitethernet1/9", "gigabitethernet1/10"] %}
+ switchport access vlan 1701
+ switchport mode access
+ {%- elif interface.name.lower() == "gigabitethernet1/1" %}
+ switchport trunk allowed vlan 1705,1707
+ switchport mode trunk
+ {%- endif %}
+ no cdp enable
+ storm-control multicast level 10.00
+ storm-control broadcast level 10.00
+ storm-control action shutdown
+ storm-control action trap
+ {%- if interface.name.lower() not in ["gigabitethernet1/2", "gigabitethernet1/11"] %}
+ spanning-tree bpduguard enable
+ {%- endif %}
+!
+{%- endfor %}
+
+!
+{% for interface in interfaces if interface.name.lower() in ["gigabitethernet1/15", "gigabitethernet1/16", "gigabitethernet1/17", "gigabitethernet1/18", "gigabitethernet1/19", "gigabitethernet1/20", "gigabitethernet1/21", "gigabitethernet1/22", "gigabitethernet1/23"] %}
+interface Ethernet1/{{ interface.name.split('/')[-1] }}
+ description {{ interface.description }}
+ {%- if interface.name.lower() == "gigabitethernet1/15" %}
+ switchport trunk allowed vlan 1715,1717
+ switchport mode trunk
+ {%- elif interface.name.lower() == "gigabitethernet1/16" %}
+ no switchport
+ ip address {{ interface.ip_address }} {{ interface.subnet_mask }}
+ ip ospf network point-to-point
+ ip ospf dead-interval 10
+ ip ospf hello-interval 3
+ ip ospf cost 100
+ {%- elif interface.name.lower() in ["gigabitethernet1/17", "gigabitethernet1/18", "gigabitethernet1/19", "gigabitethernet1/20"] %}
+ switchport access vlan 1712
+ switchport mode access
+ {%- elif interface.name.lower() in ["gigabitethernet1/21", "gigabitethernet1/22", "gigabitethernet1/23"] %}
+ switchport access vlan 1711
+ switchport mode access
+ {%- endif %}
+ no cdp enable
+ storm-control multicast level 10.00
+ storm-control broadcast level 10.00
+ storm-control action shutdown
+ storm-control action trap
+ {%- if interface.name.lower() not in ["gigabitethernet1/15", "gigabitethernet1/16"] %}
+ spanning-tree bpduguard enable
+ {%- endif %}
+!
+{% endfor %}
+!
+{% for interface in interfaces if interface.name.lower().startswith('vlan') %}
+interface {{ interface.name }}
+ description {{ interface.description }}
+ {%- if interface.name != "Vlan1" %}
+ mtu 9198
+ {%- endif %}
+ {%- if interface.vrf != "N/A" %}
+ vrf member {{ interface.vrf }}
+ {%- endif %}
+ ip address {{ interface.ip_address }} {{ interface.subnet_mask }}
+ {%- if interface.name != "Vlan1" %}
+ ip arp timeout 1800
+ {%- endif %}
+ {%- if interface.hsrp_ip != "N/A" %}
+ hsrp version 2
+ hsrp {{ interface.name.split('Vlan')[-1] }}
+  ip {{ interface.hsrp_ip }}
+  {%- if interface.hsrp_priority != "N/A" %}
+  priority {{ interface.hsrp_priority }}
+  {%- endif %}
+  preempt
+  track 1 decrement 10
+  track 101 decrement 50
+ {%- endif %}
+ {%- if interface.name in ["Vlan1707", "Vlan1717"] %}
+ bfd interval 100 min_rx 100 multiplier 5
+ bfd
+ no ip redirects
+ no bfd echo
+ {%- endif %}
+ {%- if "shutdown" in interface and interface.shutdown %}
+ shutdown
+ {%- else %}
+ no shutdown
+ {%- endif %}
+!
+{%- endfor %}
+!
+
+{% for interface in ospf_details.passive_interfaces %}
+interface {% if 'GigabitEthernet' in interface %}eth{{ interface.split('GigabitEthernet')[1] }}{% else %}{{ interface.lower() }}{% endif %}
+ no ip ospf passive-interface
+ ip router ospf {{ ospf_details.ospf_id }} area {{ ospf_details.areas[0] }}
+ bfd
+ no ip redirects
+ no bfd echo
+ ip ospf bfd
+!
+{% endfor %}
+router ospf {{ ospf_details.ospf_id }}
+  router-id {{ ospf_details.router_id }}
+  max-metric router-lsa on-startup wait-for bgp 65138
+  log-adjacency-changes detail
+  timers throttle spf 100 100 5000
+  timers throttle lsa 5 100 5000
+  timers lsa-arrival 50
+  passive-interface default
+  default-information originate
+!
+
+!
+router bgp {{ bgp_details.bgp_as }}
+  router-id {{ bgp_details.bgp_router_id }}
+  log-neighbor-changes
+  timers bgp 1 3
+  address-family ipv4 unicast
+  {%- for network in bgp_details.address_family_ipv4.networks %}
+  network {{ network.network }} mask {{ network.mask }}
+  {%- endfor %}
+  redistribute direct route-map SET_COMM
+  redistribute static route-map SET_COMM
+  {%- for neighbor in bgp_details.neighbors %}
+  neighbor {{ neighbor.neighbor_ip }}
+    remote-as {{ neighbor.remote_as }}
+    description {{ neighbor.description }}
+    {%- if neighbor.password %}
+    password 7 {{ neighbor.password }}
+    {%- endif %}
+    update-source {{ neighbor.update_source }}
+    timers 1 3
+    shutdown
+  {%- endfor %}
+  address-family ipv4 unicast
+   send-community
+!
+{%- if 'address_family_ipv4_vrf_METROE-E' in bgp_details %}
+vrf METROE-E
+  address-family ipv4 unicast
+  redistribute direct route-map SB-IPV4-METROE-ASSIGNED-SPACE
+  redistribute static route-map SB-IPV4-METROE-ASSIGNED-SPACE
+  {%- for neighbor in bgp_details['address_family_ipv4_vrf_METROE-E'].neighbors %}
+  neighbor {{ neighbor.neighbor_ip }}
+    remote-as {{ neighbor.remote_as }}
+    description {{ neighbor.description }}
+    {%- if neighbor.password %}
+    password 7 {{ neighbor.password }}
+    {%- endif %}
+    shutdown
+  {%- endfor %}
+  address-family ipv4 unicast
+!
+{%- endif %}
+
+
+
+
+
+

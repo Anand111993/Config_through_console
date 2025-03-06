@@ -1,0 +1,13 @@
+Value INTF (\S+)
+Value DESC (.*)
+Value VRF (\S*)
+Value IPADDR (\d+\.\d+\.\d+\.\d+|N/A)
+Value SUBNET (\d+\.\d+\.\d+\.\d+|N/A)
+
+Start
+  ^interface ${INTF} -> Continue
+  ^ description ${DESC} -> Continue
+  ^ vrf forwarding ${VRF} -> Continue
+  ^ ip address ${IPADDR} ${SUBNET} -> Continue
+  ^interface \S+ -> Record Start
+  ^! -> Record

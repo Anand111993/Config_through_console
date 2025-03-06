@@ -1,0 +1,40 @@
+interface Loopback0
+ description ASBNVL01_Lo0
+ ip address 10.169.2.113 255.255.255.255
+!
+interface Loopback1
+ description ASBNVL01_Lo1
+ ip address 10.169.2.115 255.255.255.255
+!
+interface Loopback101
+ description HSRP Control Interface Loopback101
+ no ip address
+!
+interface Port-channel1
+ description To ASBNVL02 Po1 - Etherchannel
+ switchport
+ switchport trunk allowed vlan 111,1538,1701-1703,1708,1711-1713,1718
+ switchport mode trunk
+ mtu 9198
+ flowcontrol receive on
+ storm-control broadcast include multicast
+ storm-control broadcast level 0.10
+ storm-control action trap
+!
+interface FastEthernet1
+ description 0106.07.55_ASMNVL21_E1/10
+ vrf forwarding mgmtVrf
+ ip address 5.195.32.40 255.255.255.128
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet1/1
+ description 151.04_NVBSC071_LAN_00
+ switchport trunk allowed vlan 1705,1707
+ switchport mode trunk
+ no cdp enable
+ storm-control broadcast include multicast
+ storm-control broadcast level 1.00
+ storm-control action shutdown
+ storm-control action trap
+!

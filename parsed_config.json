@@ -1,0 +1,766 @@
+{
+    "hostname": "ASBNVL01",
+    "interfaces": [
+        {
+            "name": "FastEthernet1",
+            "description": "0106.07.55_ASMNVL21_E1/10",
+            "vrf": "mgmtVrf",
+            "ip_address": "5.195.32.40",
+            "subnet_mask": "255.255.255.128",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "TenGigabitEthernet1/50",
+            "description": "0105.007_DSCNVL11_E8-1-2",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Loopback101",
+            "description": "HSRP Control Interface Loopback101",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Loopback0",
+            "description": "ASBNVL01_Lo0",
+            "vrf": "N/A",
+            "ip_address": "10.169.2.113",
+            "subnet_mask": "255.255.255.255",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Loopback1",
+            "description": "ASBNVL01_Lo1",
+            "vrf": "N/A",
+            "ip_address": "10.169.2.115",
+            "subnet_mask": "255.255.255.255",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Port-channel1",
+            "description": "To ASBNVL02 Po1 - Etherchannel",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/1",
+            "description": "151.04_NVBSC071_LAN_00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/2",
+            "description": "151.04_NVBSC071_LAN_01",
+            "vrf": "N/A",
+            "ip_address": "10.166.56.193",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/3",
+            "description": "151.04_NVBSC071_01_32_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/4",
+            "description": "151.04_NVBSC071_02_32_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/5",
+            "description": "151.04_NVBSC071_01_35_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/6",
+            "description": "151.04_NVBSC071_02_35_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/7",
+            "description": "151.04_NVBSC071_01_19_ETP2_W00 - ETPE 2_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/8",
+            "description": "151.04_NVBSC071_02_22_ETP2_W00 - ETPE 3_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/9",
+            "description": "151.04_NVBSC071_02_25_ETP2_W00 - ETPE 4_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/10",
+            "description": "151.04_NVBSC071_02_29_ETP2_W00 - ETPE 5_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/11",
+            "description": "151.04_NVBSC071_02_14_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/12",
+            "description": "151.04_NVBSC071_02_15_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/13",
+            "description": "151.04_NVBSC071_02_16_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/14",
+            "description": "151.04_NVBSC071_02_17_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/15",
+            "description": "0151.05_KXBSC071_LAN_00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/16",
+            "description": "0151.05_KXBSC071_LAN_01",
+            "vrf": "N/A",
+            "ip_address": "10.168.152.193",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/17",
+            "description": "0151.05_KXBSC071_01_32_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/18",
+            "description": "0151.05_KXBSC071_02_32_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/19",
+            "description": "0151.05_KXBSC071_01_35_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/20",
+            "description": "0151.05_KXBSC071_02_35_ETP2_W00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/21",
+            "description": "0151.05_KXBSC071_01_19_ETP2_W00 - ETPE 2_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/22",
+            "description": "0151.05_KXBSC071_02_22_ETP2_W00 - ETPE 3_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/23",
+            "description": "0151.05_KXBSC071_02_25_ETP2_W00 - ETPE 4_0",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/24",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/25",
+            "description": "0151.05_KXBSC071_02_15_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/26",
+            "description": "0151.05_KXBSC071_02_16_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/27",
+            "description": "0151.05_KXBSC071_02_17_ETIP_RJ00",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/28",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/29",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/30",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/31",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/32",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/33",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/34",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/35",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/36",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/37",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/38",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/39",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/40",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/41",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/42",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/43",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/44",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/45",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/46",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/47",
+            "description": "DEFAULTED BY HPNA",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "GigabitEthernet1/48",
+            "description": "106.11_TRNNVL22_X7",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "TenGigabitEthernet1/49",
+            "description": "N/A",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "TenGigabitEthernet1/51",
+            "description": "NET_106.10_ASBNVL02_T1/51",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "TenGigabitEthernet1/52",
+            "description": "NET_106.10_ASBNVL02_T1/52",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1",
+            "description": "N/A",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan111",
+            "description": "NET_106.10_ASBNVL02_T1/51,T1/52",
+            "vrf": "N/A",
+            "ip_address": "10.177.27.233",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan202",
+            "description": "0106.007_DRCNVL51_BE651.202_Default_via_DSCNVL11_E8-1-2",
+            "vrf": "N/A",
+            "ip_address": "10.177.27.242",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan308",
+            "description": "0106.007_DRCNVL51_BE651.308_VRF_METROE-E_via_DSCNVL11_E8-1-2",
+            "vrf": "METROE-E",
+            "ip_address": "10.177.27.246",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1538",
+            "description": "SB_VRF_METROE_Interconnect",
+            "vrf": "METROE-E",
+            "ip_address": "10.177.27.237",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1701",
+            "description": "NVBSC071_ETPE_Pabis",
+            "vrf": "METROE-E",
+            "ip_address": "10.166.56.130",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.166.56.129",
+            "hsrp_priority": "105"
+        },
+        {
+            "name": "Vlan1702",
+            "description": "NVBSC071_ETPA_AoIP",
+            "vrf": "N/A",
+            "ip_address": "10.166.56.146",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.166.56.145",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1703",
+            "description": "NVBSC071_ETIP_DS0LMU",
+            "vrf": "METROE-E",
+            "ip_address": "10.166.56.162",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.166.56.161",
+            "hsrp_priority": "105"
+        },
+        {
+            "name": "Vlan1705",
+            "description": "NVBSC071_SWU0_Global",
+            "vrf": "N/A",
+            "ip_address": "10.166.56.177",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1707",
+            "description": "NVBSC071_SWU0_METROE-E",
+            "vrf": "METROE-E",
+            "ip_address": "10.166.56.181",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1708",
+            "description": "NVBSC071_ETIP_MANA0_10.166.56.96/28",
+            "vrf": "METROE-E",
+            "ip_address": "10.166.56.98",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.166.56.97",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1711",
+            "description": "KXBSC071_ETPE_PAbis",
+            "vrf": "METROE-E",
+            "ip_address": "10.168.152.130",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.168.152.129",
+            "hsrp_priority": "105"
+        },
+        {
+            "name": "Vlan1712",
+            "description": "KXBSC071_ETPA_AoIP",
+            "vrf": "N/A",
+            "ip_address": "10.168.152.146",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.168.152.145",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1713",
+            "description": "KXBSC071_ETIP_DS0LMU",
+            "vrf": "METROE-E",
+            "ip_address": "10.168.152.162",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.168.152.161",
+            "hsrp_priority": "105"
+        },
+        {
+            "name": "Vlan1715",
+            "description": "KXBSC071_SWU0_Global",
+            "vrf": "N/A",
+            "ip_address": "10.168.152.177",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1717",
+            "description": "KXBSC071_SWU0_METROE-E",
+            "vrf": "METROE-E",
+            "ip_address": "10.168.152.181",
+            "subnet_mask": "255.255.255.252",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "Vlan1718",
+            "description": "KXBSC071_ETIP_MANA0_10.168.152.96/28",
+            "vrf": "METROE-E",
+            "ip_address": "10.168.152.98",
+            "subnet_mask": "255.255.255.240",
+            "hsrp_ip": "10.168.152.97",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "default",
+            "description": "N/A",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "N/A",
+            "description": "N/A",
+            "vrf": "N/A",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        },
+        {
+            "name": "${INTF}",
+            "description": "${DESC} -> Continue",
+            "vrf": "${VRF} -> Continue",
+            "ip_address": "N/A",
+            "subnet_mask": "N/A",
+            "hsrp_ip": "N/A",
+            "hsrp_priority": "N/A"
+        }
+    ],
+    "ospf_details": {
+        "ospf_id": "500",
+        "router_id": "10.169.2.113",
+        "passive_interfaces": [
+            "GigabitEthernet1/2",
+            "GigabitEthernet1/16",
+            "Vlan111"
+        ],
+        "areas": [
+            "0.0.0.0"
+        ]
+    },
+    "bgp_details": {
+        "bgp_as": "65138",
+        "bgp_router_id": "10.169.2.113",
+        "neighbors": [
+            {
+                "neighbor_ip": "10.177.27.241",
+                "remote_as": "65137",
+                "description": "DRCNVL51_Global",
+                "password": "7 0612022E",
+                "update_source": ""
+            },
+            {
+                "neighbor_ip": "10.177.27.234",
+                "remote_as": "65138",
+                "description": "ASBNVL02",
+                "password": "7 105A0416071E1E0E",
+                "update_source": "Vlan111"
+            }
+        ],
+        "address_family_ipv4": {
+            "networks": [
+                {
+                    "network": "10.166.56.0",
+                    "mask": "255.255.255.192"
+                },
+                {
+                    "network": "10.166.56.204",
+                    "mask": "255.255.255.252"
+                },
+                {
+                    "network": "10.168.152.0",
+                    "mask": "255.255.255.192"
+                },
+                {
+                    "network": "10.168.152.204",
+                    "mask": "255.255.255.252"
+                }
+            ]
+        },
+        "address_family_ipv4_vrf_METROE-E": {
+            "neighbors": [
+                {
+                    "neighbor_ip": "10.177.27.245",
+                    "remote_as": "65137",
+                    "description": "DRCNVL51_VRF_METROE-E",
+                    "password": "7 0612022E"
+                },
+                {
+                    "neighbor_ip": "10.177.27.238",
+                    "remote_as": "65138",
+                    "description": "ASBNVL02_VRF_METROE-E",
+                    "password": "7 120D081810020001"
+                }
+            ]
+        }
+    }
+}

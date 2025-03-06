@@ -1,0 +1,1219 @@
+HOSTNAME: DREALB11
+VERSION: 15.5
+
+SERVICE_CONFIG: ['nagle', 'tcp-keepalives-in', 'tcp-keepalives-out', 'timestamps debug datetime msec localtime show-timezone', 'timestamps log datetime msec localtime show-timezone', 'password-encryption']
+NOSERVICE_CONFIG: ['pad']
+
+PLATFORM_CONFIG: []
+NOPLATFORM_CONFIG: ['punt-keepalive disable-kernel-core']
+
+AQM: register-fnf
+
+VRF: Mgmt-intf
+
+LOGGING_CONFIG: ['buffered 50000 informational', 'rate-limit all 10', 'alarm informational', 'trap debugging', 'facility auth', 'source-interface Loopback0', 'host 10.93.62.93 transport udp port 2025', 'host 10.94.80.63 transport udp port 2025']
+NOLOGGING_CONFIG: ['console']
+
+AAA_SERVERS: 
+  - SERVER: tacacs+ T1
+    SERVERINFO: 10.135.194.1 single-connection key 7 013456004102474E01
+  - SERVER: tacacs+ T2
+    SERVERINFO: 10.94.198.65 single-connection key 7 002343021E524A472F
+
+AAAAUTHENTICATION: ['login default group T1 group T2 local-case', 'enable default group T1 group T2 enable']
+AAAAUTHORIZATION: ['console', 'config-commands', 'exec default local group T1 group T2 none ', 'commands 15 default local group T1 group T2 none ', 'reverse-access default none ']
+AAAACCOUNTING: ['exec default start-stop group T1 group T2', 'commands 15 default start-stop group T1 group T2', 'connection default start-stop group T1 group T2', 'system default start-stop group T1 group T2']
+
+IP_CONFIG: ['name-server 10.66.3.25 10.66.3.26', 'domain name datacom.net', 'tcp selective-ack', 'tcp timestamp', 'tcp synwait-time 5', 'telnet source-interface Loopback0', 'telnet tos 40', 'local policy route-map Local_QoS', 'forward-protocol nd', 'bgp-community new-format', 'ftp source-interface Loopback0', 'ftp username Cisco', 'ftp password 7 0222054F0A05002C1D1C5A5D', 'tftp source-interface Loopback0', 'route 10.10.0.0 255.255.0.0 Null0', 'route 10.10.102.30 255.255.255.255 10.10.100.100', 'route 156.80.2.0 255.255.255.0 10.10.199.2', 'route 157.70.50.5 255.255.255.255 10.10.199.4', 'route 172.28.41.10 255.255.255.255 10.10.199.3', 'tacacs source-interface Loopback0', 'ssh time-out 60', 'ssh authentication-retries 2', 'ssh source-interface Loopback0', 'ssh version 2', 'prefix-list DEFAULT-ROUTE seq 1 permit 0.0.0.0/0']
+NOIP_CONFIG: ['source-route', 'gratuitous-arps', 'bootp server', 'domain lookup', 'forward-protocol udp tftp', 'forward-protocol udp domain', 'forward-protocol udp time', 'forward-protocol udp netbios-ns', 'forward-protocol udp netbios-dgm', 'forward-protocol udp tacacs', 'http server', 'http secure-server']
+
+IPV6_MULTICAST: ['rpf use-bgp', 'vrf Mgmt-intf rpf use-bgp']
+
+RECORDFLOWS: 
+  - NAME: FlowExporter-Fluke
+    DESCRIPTION: flow record for traffic analysis
+    MATCH: ['routing source as', 'routing destination as peer', 'routing next-hop address ipv4 bgp', 'ipv4 version', 'ipv4 dscp', 'ipv4 fragmentation flags', 'ipv4 protocol', 'ipv4 source address', 'ipv4 destination address', 'transport tcp source-port', 'transport tcp destination-port', 'transport udp source-port', 'transport udp destination-port']
+    COLLECT: ['interface input', 'interface output', 'application http host', 'application pop3 server']
+
+EXPORTERFLOWS: 
+  - NAME: FlowExporter-Fluke
+    DESCRIPTION: Flow Exporter to Fluke NetFlow Collector
+    DESTINATION: 10.162.44.82
+    SOURCE: Loopback0
+    TRANSPORT: udp 2055
+    OPTION: ['interface-table timeout 120', 'sampler-table timeout 120']
+
+MONITORFLOW: 
+  - NAME: FlowMap-IPv4
+    DESCRIPTION: NetFlow Monitor session to capture IPv4 headers
+    EXPORTER: FlowExporter-Fluke
+    CACHE: timeout active 60
+    RECORD: netflow ipv4 original-input
+
+SAMPLERFLOW: 
+  - NAME: NETFLOW_1in5000
+    SAMPLERMODE: random 1 out-of 5000
+
+CONTROLLERS: 
+  - ID: 0/1/0
+    DESCRIPTION: Metro connection to DACCs Port DS3-673
+    CABLELENGTH: 224
+    FRAMING: 
+    T1: ['1 channel-group 0 timeslots 1-24', '2 channel-group 0 timeslots 1-24', '3 channel-group 0 timeslots 1-24', '4 channel-group 0 timeslots 1-24', '5 channel-group 0 timeslots 1-24', '6 channel-group 0 timeslots 1-24', '7 channel-group 0 timeslots 1-24', '8 channel-group 0 timeslots 1-24', '9 channel-group 0 timeslots 1-24', '10 channel-group 0 timeslots 1-24', '11 channel-group 0 timeslots 1-24', '12 channel-group 0 timeslots 1-24', '13 channel-group 0 timeslots 1-24', '14 channel-group 0 timeslots 1-24', '15 channel-group 0 timeslots 1-24', '16 channel-group 0 timeslots 1-24', '17 channel-group 0 timeslots 1-24', '18 channel-group 0 timeslots 1-24', '19 channel-group 0 timeslots 1-24', '20 channel-group 0 timeslots 1-24', '21 channel-group 0 timeslots 1-24', '22 channel-group 0 timeslots 1-24', '23 channel-group 0 timeslots 1-24', '24 channel-group 0 timeslots 1-24', '25 channel-group 0 timeslots 1-24', '26 channel-group 0 timeslots 1-24', '27 channel-group 0 timeslots 1-24', '28 channel-group 0 timeslots 1-24']
+    OperationalStatus: 
+
+  - ID: 0/1/1
+    DESCRIPTION: 
+    CABLELENGTH: 100
+    FRAMING: m23
+    T1: []
+    OperationalStatus: 
+
+LOOPBACK_INTERFACES: 
+  - INTERFACE: "0"
+    DESCRIPTION: "EIT Loopback"
+    IPADDRESS: 10.10.62.3
+    MASK: 255.255.255.255
+
+MULTILINK_INTERFACES: 
+  - INTERFACE: "21"
+    DESCRIPTION: "MONTANO old IP 10.10.21.254 new IP 10.123.199.254 migrated to Broadband_CR 3027645"
+    IPADDRESS: 10.10.9.81
+    MASK: 255.255.255.252
+    IPOPTION: []
+    OperationalStatus: shutdown
+    CDP: enable
+    PPP: ['multilink', 'multilink group 21']
+    SERV_POLICY: QOS
+
+  - INTERFACE: "23"
+    DESCRIPTION: "SAN MATEO old IP 10.10.62.23  new IP 10.122.120.254 migrated to Broadband_CR 2817147 "
+    IPADDRESS: 10.10.9.89
+    MASK: 255.255.255.252
+    IPOPTION: []
+    OperationalStatus: shutdown
+    CDP: enable
+    PPP: ['multilink', 'multilink group 23']
+    SERV_POLICY: QOS
+
+  - INTERFACE: "25"
+    DESCRIPTION: ""
+    IPADDRESS: 
+    MASK: 
+    IPOPTION: ['address']
+    OperationalStatus: shutdown
+    CDP: 
+    PPP: ['multilink', 'multilink group 25']
+    SERV_POLICY: QOS
+
+  - INTERFACE: "27"
+    DESCRIPTION: "00344 TELSHOR CENTER, MU1, LAN: 10.10.27.1 QWEST / ALBUQUERQUE:54/HCGS/003000//MS"
+    IPADDRESS: 10.10.9.105
+    MASK: 255.255.255.252
+    IPOPTION: []
+    OperationalStatus: shutdown
+    CDP: enable
+    PPP: ['multilink', 'multilink group 27']
+    SERV_POLICY: QOS
+
+  - INTERFACE: "28"
+    DESCRIPTION: "LA MIRADA old IP 10.10.62.28  new IP 10.122.84.254 migrated to Broadband_CR 3068477 "
+    IPADDRESS: 10.10.9.109
+    MASK: 255.255.255.252
+    IPOPTION: []
+    OperationalStatus: shutdown
+    CDP: enable
+    PPP: ['multilink', 'multilink group 28']
+    SERV_POLICY: QOS
+
+  - INTERFACE: "30"
+    DESCRIPTION: "COORS BLVD NW & SEQUOIA R old IP 10.10.62.30  new IP 10.121.252.254 migrated to Broadband b"
+    IPADDRESS: 10.10.9.117
+    MASK: 255.255.255.252
+    IPOPTION: []
+    OperationalStatus: shutdown
+    CDP: enable
+    PPP: ['multilink', 'multilink group 30']
+    SERV_POLICY: QOS
+
+  - INTERFACE: "31"
+    DESCRIPTION: "01906 JUAN TABO & MENUAL 2, MU1, LAN: 10.10.31.1 CENTURYLINK:54/HCGS/034431//MS"
+    IPADDRESS: 10.10.9.121
+    MASK: 255.255.255.252
+    IPOPTION: []
+    OperationalStatus: shutdown
+    CDP: enable
+    PPP: ['multilink', 'multilink group 31']
+    SERV_POLICY: QOS
+
+GIGABIT_INTERFACES: 
+  - INTERFACE: "0/0/0"
+    DESCRIPTION: ""
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: shutdown
+    NEGOTIATION: 
+    NONEGOTIATION: auto
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/1"
+    DESCRIPTION: "ASEQRO11_Gi1/1/1"
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address', 'redirects', 'unreachables']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: auto
+    CDP: enable
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/1.50"
+    DESCRIPTION: "ABQ RBO Telecom"
+    ENCAPSULATION: 50
+    IPADDRESS: 10.10.34.1
+    MASK: 255.255.255.128
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/1.60"
+    DESCRIPTION: "ABQ RBO Security"
+    ENCAPSULATION: 60
+    IPADDRESS: 10.10.34.161
+    MASK: 255.255.255.240
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/1.70"
+    DESCRIPTION: "ABQ RBO WiFi_Mgmt."
+    ENCAPSULATION: 70
+    IPADDRESS: 10.10.34.129
+    MASK: 255.255.255.224
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/1.80"
+    DESCRIPTION: "ABQ RBO NT_User_Mgmt."
+    ENCAPSULATION: 80
+    IPADDRESS: 10.10.33.1
+    MASK: 255.255.255.128
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/1.90"
+    DESCRIPTION: "ABQ RBO WiFi_USERS_DHCP"
+    ENCAPSULATION: 90
+    IPADDRESS: 10.10.33.129
+    MASK: 255.255.255.128
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/2"
+    DESCRIPTION: ""
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: shutdown
+    NEGOTIATION: auto
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/3"
+    DESCRIPTION: ""
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: shutdown
+    NEGOTIATION: auto
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/4"
+    DESCRIPTION: ""
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: shutdown
+    NEGOTIATION: auto
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/5"
+    DESCRIPTION: ""
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: shutdown
+    NEGOTIATION: auto
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6"
+    DESCRIPTION: "108.04.06_DSEALB21_GE0_0_0_6"
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['address', 'redirects', 'unreachables']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['use-bia']
+    SPEED: 1000
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: auto
+    CDP: enable
+    SERV_POLICY: MARK_QOS
+
+  - INTERFACE: "0/0/6.63"
+    DESCRIPTION: "*** Management Network ***"
+    ENCAPSULATION: 63
+    IPADDRESS: 10.10.63.3
+    MASK: 255.255.255.0
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '63 ip 10.10.63.1', '63 priority 110', '63 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.100"
+    DESCRIPTION: "*** IDF User Network 10.10.0.0/24  ***"
+    ENCAPSULATION: 100
+    IPADDRESS: 10.10.0.3
+    MASK: 255.255.255.0
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: "-broadcast"
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '100 ip 10.10.0.1', '100 preempt', '101 priority 255']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.101"
+    DESCRIPTION: "*** NT User Network  ***"
+    ENCAPSULATION: 101
+    IPADDRESS: 10.10.1.3
+    MASK: 255.255.255.0
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: "-broadcast"
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '101 ip 10.10.1.1', '101 priority 110', '101 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.102"
+    DESCRIPTION: "*** Engineering Network  ***"
+    ENCAPSULATION: 102
+    IPADDRESS: 10.10.2.3
+    MASK: 255.255.255.0
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '102 ip 10.10.2.1', '102 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.120"
+    DESCRIPTION: "*** MGW Engineering Network ***"
+    ENCAPSULATION: 120
+    IPADDRESS: 10.10.20.3
+    MASK: 255.255.255.0
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '120 ip 10.10.20.1', '120 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.164"
+    DESCRIPTION: "*** WiFi User Network ***"
+    ENCAPSULATION: 164
+    IPADDRESS: 10.10.64.3
+    MASK: 255.255.255.0
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: "-broadcast"
+    ACCESSGROUP: "PCI_Deny in"
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '164 ip 10.10.64.1', '164 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.165"
+    DESCRIPTION: "*** WiFi Segment ***"
+    ENCAPSULATION: 165
+    IPADDRESS: 10.10.65.3
+    MASK: 255.255.255.0
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: "-broadcast"
+    ACCESSGROUP: "PCI_Deny in"
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '165 ip 10.10.65.1', '165 priority 110', '165 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.200"
+    DESCRIPTION: "*** Engineering Network ***"
+    ENCAPSULATION: 200
+    IPADDRESS: 10.10.100.3
+    MASK: 255.255.255.0
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '200 ip 10.10.100.1', '200 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.229"
+    DESCRIPTION: "***AP WIFI MGMT 10.10.129.0***"
+    ENCAPSULATION: 229
+    IPADDRESS: 10.10.129.3
+    MASK: 255.255.255.192
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['229 ip 10.10.129.1', '229 priority 105', '229 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.299"
+    DESCRIPTION: "*** FBI Wiretap Network ***"
+    ENCAPSULATION: 299
+    IPADDRESS: 10.10.199.9
+    MASK: 255.255.255.0
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '199 ip 10.10.199.1', '199 priority 110', '199 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.340"
+    DESCRIPTION: "*** OMC Network ***"
+    ENCAPSULATION: 340
+    IPADDRESS: 10.10.240.3
+    MASK: 255.255.255.0
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '240 ip 10.10.240.1', '240 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/6.729"
+    DESCRIPTION: "*** PBX Network - 10.10.129.192/26 ***"
+    ENCAPSULATION: 729
+    IPADDRESS: 10.10.129.195
+    MASK: 255.255.255.192
+    IPHELPER: ['10.92.2.212', '10.148.251.228']
+    MTU: 
+    IPOPTION: ['redirects']
+    DIRECTEDBROADCAST: "-broadcast"
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: ['delay minimum 30 reload 120', '72 ip 10.10.129.193', '72 priority 110', '72 preempt']
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/7"
+    DESCRIPTION: "NET_112.01.10_DREALB12_0_0_7"
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 1600
+    IPOPTION: ['address']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 1000
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: auto
+    CDP: enable
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/7.62"
+    DESCRIPTION: "COS Market Crossover "
+    ENCAPSULATION: 62
+    IPADDRESS: 10.10.62.253
+    MASK: 255.255.255.252
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: point-to-point
+    BFD: interval 250 min_rx 250 multiplier 3
+    BFDECHO: echo
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0/0/7.300"
+    DESCRIPTION: "COS Area0 Crossover"
+    ENCAPSULATION: 300
+    IPADDRESS: 10.0.132.53
+    MASK: 255.255.255.252
+    IPHELPER: []
+    MTU: 
+    IPOPTION: ['redirects', 'proxy-arp']
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: point-to-point
+    BFD: interval 250 min_rx 250 multiplier 3
+    BFDECHO: echo
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+  - INTERFACE: "0"
+    DESCRIPTION: ""
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    MTU: 
+    IPOPTION: []
+    DIRECTEDBROADCAST: ""
+    ACCESSGROUP: ""
+    OSPFNetworkType: 
+    BFD: 
+    BFDECHO: 
+    STANDBY: []
+    SPEED: 
+    OperationalStatus: 
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    CDP: 
+    SERV_POLICY: 
+
+TEN_GIGABIT_INTERFACES: 
+  - INTERFACE: "0/2/0"
+    DESCRIPTION: "106.00_DRCALB21_Te0/6/0/11"
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    IPHELPER: []
+    CDP: enable
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    SPEED: 
+    OSPFNetworkType: []
+    STANDBY: []
+    ACCESSGROUP: ""
+    IPOPTION: ['address']
+    IPFLOW: []
+    DIRECTEDBROADCAST: ""
+    MTU: 
+    BFD: 
+    BFDECHO: 
+    OperationalStatus: 
+    SERV_POLICY: QOS
+
+  - INTERFACE: "0/2/0.1881"
+    DESCRIPTION: "106.00_DRCALB21_Te0/6/0/11_EIT_VRF"
+    ENCAPSULATION: 1881
+    IPADDRESS: 10.0.129.42
+    MASK: 255.255.255.252
+    IPHELPER: []
+    CDP: enable
+    NEGOTIATION: 
+    NONEGOTIATION: 
+    SPEED: 
+    OSPFNetworkType: []
+    STANDBY: []
+    ACCESSGROUP: ""
+    IPOPTION: []
+    IPFLOW: ['FlowMap-IPv4 sampler NETFLOW_1in5000 input', 'FlowMap-IPv4 sampler NETFLOW_1in5000 output']
+    DIRECTEDBROADCAST: ""
+    MTU: 
+    BFD: interval 100 min_rx 100 multiplier 5
+    BFDECHO: echo
+    OperationalStatus: 
+    SERV_POLICY: 
+
+SERIAL_INTERFACES: 
+  - INTERFACE: "0/1/0/1:0"
+    DESCRIPTION: "0273 Four Hills  LAN: 10.10.25.1  Qwest 54HCXX003001MS_INC37869156_admin_down"
+    BANDWIDTH: 1536
+    ENCAPSULATION: 
+    IPADDRESS: 10.10.9.97
+    MASK: 255.255.255.252
+    CDP: enable
+    SERV_POLICY: QOS
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: []
+
+  - INTERFACE: "0/1/0/2:0"
+    DESCRIPTION: "MONTANO old IP 10.10.21.254 new IP 10.123.199.254 migrated to Broadband_CR 3027645"
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 21']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/3:0"
+    DESCRIPTION: "SAN MATEO old IP 10.10.62.23  new IP 10.122.120.254 migrated to Broadband_CR 2817147 "
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 23']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/4:0"
+    DESCRIPTION: "LA MIRADA old IP 10.10.62.28  new IP 10.122.84.254 migrated to Broadband_CR 3068477 "
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 28']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/5:0"
+    DESCRIPTION: "COORS BLVD NW & SEQUOIA R old IP 10.10.62.30  new IP 10.121.252.254 migrated to Broadband b"
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 30']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/6:0"
+    DESCRIPTION: "00344 TELSHOR CENTER, S0/0/0:0, Multilink27 QWEST / ALBUQUERQUE 54/HCGS/003000//MS  "
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 27']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/7:0"
+    DESCRIPTION: "SAN MATEO old IP 10.10.62.23  new IP 10.122.120.254 migrated to Broadband_CR 2817147 "
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 23']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/8:0"
+    DESCRIPTION: "01906 JUAN TABO & MENUAL 2, S0/0/0:0, Multilink31 CENTURYLINK 54/HCGS/034431//MS  "
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 31']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/9:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/10:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/11:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/12:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/13:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/14:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/15:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/16:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/17:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/18:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/19:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/20:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/21:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/22:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/23:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/24:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/25:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/26:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/27:0"
+    DESCRIPTION: ""
+    BANDWIDTH: 
+    ENCAPSULATION: 
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: []
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+  - INTERFACE: "0/1/0/28:0"
+    DESCRIPTION: "COORS BLVD NW & SEQUOIA R old IP 10.10.62.30  new IP 10.121.252.254 migrated to Broadband b"
+    BANDWIDTH: 1536
+    ENCAPSULATION: ppp
+    IPADDRESS: 
+    MASK: 
+    CDP: 
+    SERV_POLICY: 
+    PPP: ['multilink', 'multilink group 30']
+    OperationalStatus: shutdown
+    IPOPTION: ['address']
+
+ROUTER_OSPF: 
+  - OSPF: 300
+    ROUTERID: 10.10.62.3
+    MAXMETRIC: router-lsa on-startup wait-for-bgp
+    ISPF: ispf
+    COST: reference-bandwidth 1000000
+    AREA: ['10.10.0.0 nssa no-summary', '10.10.0.0 range 10.10.0.0 255.255.0.0']
+    TIMER: ['throttle spf 100 100 1000', 'throttle lsa 1 100 1000', 'lsa arrival 100']
+    PASSIVEINT: ['GigabitEthernet0/0/6.100', 'GigabitEthernet0/0/6.101', 'GigabitEthernet0/0/6.102', 'GigabitEthernet0/0/6.120', 'GigabitEthernet0/0/6.164', 'GigabitEthernet0/0/6.165', 'GigabitEthernet0/0/6.200', 'GigabitEthernet0/0/6.299', 'GigabitEthernet0/0/6.340', 'GigabitEthernet0/0/6.729']
+    OSPFNETWORK: ['10.0.0.0 0.0.255.255 area 0.0.0.0', '10.10.0.0 0.0.255.255 area 10.10.0.0', '10.64.0.0 0.0.255.255 area 0.0.0.0']
+    BFD: all-interfaces
+
+ROUTER_BGP: 
+  - BGP: 65138
+    ROUTERID: 10.10.62.3
+    BGPLOG: neighbor-changes
+    BGPRESTART: ['restart restart-time 120', 'restart stalepath-time 360', 'restart']
+    BGPNETWORK: ['10.121.197.240 mask 255.255.255.252', '10.121.197.244 mask 255.255.255.252', '10.121.197.254 mask 255.255.255.255', '10.121.204.0 mask 255.255.255.192', '10.121.204.64 mask 255.255.255.192', '10.121.204.192 mask 255.255.255.224', '10.121.204.224 mask 255.255.255.248', '10.121.204.240 mask 255.255.255.252', '10.121.204.254 mask 255.255.255.255']
+    AGGNETWORK: 10.10.0.0
+    AGGMASK: 255.255.0.0
+    AGGSUM: summary-only
+    REDIST: connected
+    NEIGHBOR: ['CORENET-PE peer-group', 'CORENET-PE remote-as 65137', 'CORENET-PE password 7 120D0818', 'CORENET-PE fall-over bfd', 'CORENET-PE route-map CORENET-PE-OUT out', 'MSO-IBGP-PEER peer-group', 'MSO-IBGP-PEER remote-as 65138', 'MSO-IBGP-PEER fall-over bfd', '10.0.129.41 peer-group CORENET-PE', '10.10.62.254 peer-group MSO-IBGP-PEER']
+
+ACCESS_LISTS: ['3 remark Deny everything for NTP', '3 deny   any', '4 remark Permit NTP servers we sync to', '4 permit 10.92.192.132', '4 permit 10.92.192.133', '4 permit 10.148.24.4', '4 permit 10.148.35.4', '4 permit 10.148.80.6', '4 permit 10.92.183.4', '4 deny   any', '101 deny   icmp host 10.2.1.53 any', '101 deny   tcp host 10.2.1.53 any range msrpc 139', '101 deny   udp host 10.2.1.53 any range 135 netbios-ss', '101 deny   tcp host 10.2.1.53 any eq 445', '101 deny   udp host 10.2.1.53 any eq 445', '101 deny   tcp host 10.2.1.53 any eq 593', '101 permit ip any any', '166 remark **************************************', '166 remark * Nortel Engineering Switch          *', '166 remark * Restricts access from Passport 8600*', '166 remark * Please consult NDP before changing *', '166 remark ************************************-*', '166 permit ip 10.2.66.0 0.0.0.3 any', '166 permit ip 10.2.66.32 0.0.0.3 any', '166 permit ip host 10.2.66.20 any', '166 permit ip host 10.2.66.21 any', '166 permit ip host 10.2.66.22 any', '166 permit ip host 10.2.66.23 any', '166 permit ip host 10.2.66.24 any', '166 permit ip host 10.2.66.25 any', '166 permit ip host 10.2.66.26 any', '166 permit ip host 10.2.66.28 any', '166 permit ip host 10.2.66.29 any', '166 permit ip host 10.2.66.30 any', '166 permit ip host 10.2.66.50 any', '166 permit ip host 10.2.66.51 any', '166 permit ip host 10.2.66.52 any', '166 permit ip host 10.2.66.53 any', '166 permit ip host 10.2.66.54 any', '166 permit ip host 10.2.66.55 any', '166 permit ip host 10.2.66.56 any', '166 permit ip host 10.2.66.57 any', '166 permit ip host 10.2.66.58 any', '166 permit ip host 10.2.66.59 any', '166 permit icmp any any', '166 deny   udp any any range 0 65535', '166 deny   tcp any any range 0 65535', '166 deny   ip any any', '199 deny   ip any any fragments', '199 permit udp any any eq 18999']
+ROUTE_MAP: 
+  - ROUTEMAP: CORENET-PE-OUT deny 10
+    ROUTEMATCH: ip address prefix-list DEFAULT-ROUTE
+    ROUTESET: 
+
+  - ROUTEMAP: CORENET-PE-OUT permit 100
+    ROUTEMATCH: 
+    ROUTESET: 
+
+  - ROUTEMAP: Local_QoS permit 10
+    ROUTEMATCH: ip address Local_Router
+    ROUTESET: 
+
+  - ROUTEMAP: Local_QoS permit 20
+    ROUTEMATCH: 
+    ROUTESET: ip precedence immediate
+
+SNMP: 
+  - SNMP: ifmib ifindex persist
+
+  - SNMP: mib persist cbqos
+
+SNMP_SERVERS: 
+  - SNMPSERVER: user HPtraps01 HPtraps01 v2c 
+
+  - SNMPSERVER: user HPtraps02 HPtraps02 v2c 
+
+  - SNMPSERVER: group RO-GROUP v3 priv read ROOT-VIEW access SNMPv3-EIT
+
+  - SNMPSERVER: view ROOT-VIEW iso included
+
+  - SNMPSERVER: trap link ietf
+
+  - SNMPSERVER: trap-source Loopback0
+
+  - SNMPSERVER: queue-length 500
+
+  - SNMPSERVER: location 4830 PAN AMERICAN FREEWAY NE, ALBUQUERQUE, NM 87109
+
+  - SNMPSERVER: contact T-Mobile Datacom - (877) 878-7326
+
+  - SNMPSERVER: system-shutdown
+
+  - SNMPSERVER: enable traps snmp authentication linkdown linkup coldstart warmstart
+
+  - SNMPSERVER: enable traps tty
+
+  - SNMPSERVER: enable traps ospf state-change
+
+  - SNMPSERVER: enable traps ospf errors
+
+  - SNMPSERVER: enable traps ospf retransmit
+
+  - SNMPSERVER: enable traps ospf lsa
+
+  - SNMPSERVER: enable traps bgp
+
+  - SNMPSERVER: enable traps config
+
+  - SNMPSERVER: enable traps hsrp
+
+  - SNMPSERVER: enable traps ipmulticast
+
+  - SNMPSERVER: enable traps entity
+
+  - SNMPSERVER: enable traps rsvp
+
+  - SNMPSERVER: host 10.13.44.34 pKlzXaSuxdri9LNB5OGa7Oz1Poe7tP 
+
+  - SNMPSERVER: host 10.13.44.35 pKlzXaSuxdri9LNB5OGa7Oz1Poe7tP 
+
+  - SNMPSERVER: host 10.139.12.39 pKlzXaSuxdri9LNB5OGa7Oz1Poe7tP 
+
+  - SNMPSERVER: host 10.139.12.40 pKlzXaSuxdri9LNB5OGa7Oz1Poe7tP 
+
